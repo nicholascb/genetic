@@ -96,14 +96,28 @@ calculator = function(expression){
     return eval(expression);
 }
 
+fitness = function (resultExpect, resultGet) {
+    test = (100*resultGet)/resultExpect
+
+    /*pegar o teste e verificar se o valor é 
+    muito bom | bom         | medio       | ruim       | muito ruim
+    ----------|-------------|-------------|------------|--------------
+    90%       | 50% ate 89% | 20% ate 49% | 5% ate 19% | de 0% ate 4%
+    80%       | 12%         | 7%          | 0,9%       | 0,1%
+
+    vao ser criados 5 vetores para armazenar os cromossomos de acordo com o especificado acima
+    sera feito um random para sortiar o vetor
+    a funçao deve aceitar um vetor, para o ser feito o fitness da populacao inicial, mas deve tratar caso receba apenas um individuo
+    */
+}
 
 program = function(){
 
-    cromossomos = createPopulation(10, 32);
+    cromossomos = createPopulation(100, 32);
     for(var i = 0; i<=cromossomos.length; i++){
         expression = translator(cromossomos[i]);        
         if(valideExpression(expression)){            
-            if(calculator(expression) === 28){
+            if(calculator(expression) === 170){
                 return expression;
             }
         }       
@@ -111,7 +125,7 @@ program = function(){
     }
     regra = 0;
 
-    while (regra!==28){
+    while (regra!==170){
         mom = cromossomos[Math.round(cromossomos.length*(Math.random()))];
 
         dad = cromossomos[Math.round(cromossomos.length*(Math.random()))];
@@ -123,8 +137,8 @@ program = function(){
             cromossomos.push(son);
             expression = translator(son);        
             if(valideExpression(expression)){            
-                if(calculator(expression) === 28){                
-                    regra = 28;        
+                if(calculator(expression) === 170){                
+                    regra = 170;
                 }
             }
         }
