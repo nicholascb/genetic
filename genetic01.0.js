@@ -1,9 +1,3 @@
-/*
-Chromosomelength: length of the chomosome.
-if the position got is the same at the chromosome length, so it will be executed again.
-can't be the same because at this way there is no cross over
-return an interger.
-*/
 positionCross = function(Chromosomelength){
     var position;
 
@@ -15,23 +9,10 @@ positionCross = function(Chromosomelength){
     return position;
 }
 
-/*
-Chromosomelength: length of the chomosome.
-PermutaionPercent: percent of string that can be change.
-return an interger
-*/
 amountCross = function(Chromosomelength, PermutaionPercent){
     return Math.ceil((Math.ceil(Chromosomelength*(Math.random())))*PermutaionPercent)
 }
 
-/*
-validation of a mathematical equation 
-o: operator
-n: number 
-[]: optional
-^x: one or more
-[- or +] (n^x O n^x)^x
-*/
 valideExpression = function(expression){
     var regular ;
     regular = RegExp(/^([\+\-]?)(\d+([\+\*\-\/]?))+\d$/);
@@ -42,10 +23,6 @@ valideExpression = function(expression){
     return false;
 }
 
-/*
-crossDad and crossMom are used for create a new chromosome.
-percent: percent of string that can be change.
-*/
 crossOverChild = function(crossDad, crossMom, percent) {
     length = crossDad.length;    
     position = positionCross(length);
@@ -56,14 +33,6 @@ crossOverChild = function(crossDad, crossMom, percent) {
     return crossSon;
 }
 
-/*
-if the string is 0, it will change to 1;
-if the string is 1, it will change to 0;
-There is a random to get the string that will be change.
-return:
----------|-|--------
-    0  to Postition | gene | (position + 1) to the end of chromosome 
-*/
 mutation = function (chromosome) {
     mutationPosition = chromosome.length*(Math.random());
     gene = chromosome.substr(mutationPosition, 1);
@@ -71,7 +40,7 @@ mutation = function (chromosome) {
         gene = '1';
     }else{
         gene = '0';
-    }                
+    }                    
     return chromosome.substr(0,  mutationPosition) + gene + chromosome.substr(mutationPosition+1, chromosome.length)
 }
 
@@ -96,12 +65,6 @@ convert = function(chromosomePart){
     
 }
 
-/*
-search at the library to convert the chromosome part.
-the chromosome will cut according with size of each gene.
-chromosomeCutSize: size of each gene.
-*/
-translator = function(chromosome, chromosomeCutSize) {
 
 translator = function(chromosome ){
     var converted = '';
@@ -114,11 +77,6 @@ translator = function(chromosome ){
     return converted;
 }
 
-/*
-amount: quantity of the chromosomes that will be created.
-length: length of each on chromosome created.
-return an array of the string containing chromosomes.
-*/
 createPopulation = function(amount, length) {
     var chromosome = '';
         chromosomesArray = [];
@@ -133,9 +91,7 @@ createPopulation = function(amount, length) {
     }
     return chromosomesArray;
 }
-/*
-executes the expression
-*/
+
 calculator = function(expression){
     return eval(expression);
 }
@@ -151,13 +107,13 @@ program = function(){
                 return expression;
             }
         }       
-
+ 
     }
     regra = 0;
-   
 
     while (regra!==28){
         mom = cromossomos[Math.round(cromossomos.length*(Math.random()))];
+
         dad = cromossomos[Math.round(cromossomos.length*(Math.random()))];
         if(mom && dad !== undefined){
             son = crossOverChild(mom,dad,0.7);
@@ -172,6 +128,7 @@ program = function(){
                 }
             }
         }
+
     }
        return expression;
               
