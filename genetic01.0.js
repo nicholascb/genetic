@@ -141,10 +141,6 @@ calculator = function(expression){
 }
 
 
-program = function(result, quantidade, tamanho){
-        inicio = new Date().getTime();
-  
-    cromossomos = createPopulation(quantidade, tamanho);
 program = function(){
 
     cromossomos = createPopulation(10, 32);
