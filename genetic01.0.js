@@ -102,10 +102,12 @@ the chromosome will cut according with size of each gene.
 chromosomeCutSize: size of each gene.
 */
 translator = function(chromosome, chromosomeCutSize) {
+
+translator = function(chromosome ){
     var converted = '';
     if(chromosome){
-        for(var i = 0; i <= chromosome.length; i+=chromosomeCutSize){
-            converted += convert(chromosome.substr(i, chromosomeCutSize));
+        for(var i = 0; i <= chromosome.length; i+=4){
+            converted += convert(chromosome.substr(i, 4));
         }
     }
 
@@ -143,10 +145,13 @@ program = function(result, quantidade, tamanho){
         inicio = new Date().getTime();
   
     cromossomos = createPopulation(quantidade, tamanho);
+program = function(){
+
+    cromossomos = createPopulation(10, 32);
     for(var i = 0; i<=cromossomos.length; i++){
         expression = translator(cromossomos[i]);        
         if(valideExpression(expression)){            
-            if(calculator(expression) === result){
+            if(calculator(expression) === 28){
                 return expression;
             }
         }       
@@ -154,7 +159,8 @@ program = function(result, quantidade, tamanho){
     }
     regra = 0;
    
-    while (regra!==result){
+
+    while (regra!==28){
         mom = cromossomos[Math.round(cromossomos.length*(Math.random()))];
         dad = cromossomos[Math.round(cromossomos.length*(Math.random()))];
         if(mom && dad !== undefined){
@@ -164,13 +170,13 @@ program = function(result, quantidade, tamanho){
             }
             cromossomos.push(son);
             expression = translator(son);        
-            if(valideExpression(expression)){   
-                if(calculator(expression) === result){                
-                    regra = result;        
+            if(valideExpression(expression)){            
+                if(calculator(expression) === 28){                
+                    regra = 28;        
                 }
             }
         }
     }
-    fim = new Date().getTime();
-    return fim - inicio;
+       return expression;
+              
 }
