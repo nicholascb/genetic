@@ -1,3 +1,11 @@
+resultExpect = 20;
+arrayFitness = new Object();
+arrayFitness['veryGood'] = [];
+arrayFitness['good']     = [];
+arrayFitness['medium']   = [];
+arrayFitness['bad']      = [];
+arrayFitness['veryBad']  = [];
+
 positionCross = function(Chromosomelength){
     var position;
 
@@ -96,39 +104,95 @@ calculator = function(expression){
     return eval(expression);
 }
 
-fitness = function (resultExpect, resultGet) {
-    test = (100*resultGet)/resultExpect
+fitness = function (resultGet, chromosome) {
+    test = 1/(resultExpect - resultGet) //teve ser revisto
 
-    /*pegar o teste e verificar se o valor é 
-    muito bom | bom         | medio       | ruim       | muito ruim
-    ----------|-------------|-------------|------------|--------------
-    90%       | 50% ate 89% | 20% ate 49% | 5% ate 19% | de 0% ate 4%
-    80%       | 12%         | 7%          | 0,9%       | 0,1%
+                       /*pegar o teste e verificar se o valor é 
+                       muito bom(1) | bom(2)      | medio(3)    | ruim(4)    | muito ruim(5)
+                          ----------|-------------|-------------|------------|--------------
+valor da variavel test        90%   | 50% ate 89% | 20% ate 49% | 5% ate 19% | de 0% ate 4%
+chance de ser sortiado        80%   | 12%         | 7%          | 0,9%       | 0,1%
+   
+          vao ser criados 5 vetores para armazenar os cromossomos de acordo com o especificado acima
+          sera feito um random para sortiar o vetor
+          a funçao deve aceitar um vetor, para o ser feito o fitness da populacao inicial, mas deve tratar caso receba apenas um individuo
+       */
+    if(test>=0.9){
+         arrayFitness['veryGood'].push(chromosome);
+    }else{
+        if(test<0.9 && test>=0.5){
+            arrayFitness['good'].push(chromosome);
+        }else{
+            if(test<0.5 && teste>=0.2){
+                arrayFitness['medium'].push(chromosome);
+            }else{
+                if(test<0.2 && test>=0.05){
+                    arrayFitness['bad'].push(chromosome);
+                }else{
+                    arrayFitness['veryBad'].push(chromosome);
+                }
+            }
+        }
+    }
 
-    vao ser criados 5 vetores para armazenar os cromossomos de acordo com o especificado acima
-    sera feito um random para sortiar o vetor
-    a funçao deve aceitar um vetor, para o ser feito o fitness da populacao inicial, mas deve tratar caso receba apenas um individuo
-    */
+}
+
+roulette = function() {
+    random = Math.random();
+
+    if(test>=0.30){
+        if(arrayFitness['veryGood'].length !== 0){
+            arrayFitness['veryGood'][Math.round(arrayFitness['veryGood'].length*(Math.random()))];
+        }     
+    }else{
+        if(test<0.29 && test>=0.15){
+            if(arrayFitness['good'].length !== 0){
+                arrayFitness['good'][Math.round(arrayFitness['good'].length*(Math.random()))];
+            } 
+        }else{
+            if(test<0.14 && teste>=0.07){
+                if(arrayFitness['medium'].length !== 0){
+                    arrayFitness['medium'][Math.round(arrayFitness['medium'].length*(Math.random()))];
+                } 
+            }else{
+                if(test<0.06 && test>=0.02){
+                    if(arrayFitness['bad'].length !== 0){
+                        arrayFitness['bad'][Math.round(arrayFitness['bad'].length*(Math.random()))];
+                    } 
+                }else{
+                    if(arrayFitness['veryBad'].length !== 0){
+                        arrayFitness['veryBad'][Math.round(arrayFitness['veryBad'].length*(Math.random()))];
+                    } 
+                }
+            }
+        }
+    }
+
+
 }
 
 program = function(){
 
     cromossomos = createPopulation(100, 32);
     for(var i = 0; i<=cromossomos.length; i++){
-        expression = translator(cromossomos[i]);        
-        if(valideExpression(expression)){            
-            if(calculator(expression) === 170){
+        cromossomo = cromossomos[i];
+        expression = translator(cromossomo);        
+        if(valideExpression(expression)){
+            value = calculator(expression);
+            if(value === resultExpect){
                 return expression;
+            }else{
+                fitness(value, cromossomo)
             }
         }       
  
     }
+  
     regra = 0;
+    while (regra!==resultExpect){
+        mom = roulette();
+        dad = roulette();
 
-    while (regra!==170){
-        mom = cromossomos[Math.round(cromossomos.length*(Math.random()))];
-
-        dad = cromossomos[Math.round(cromossomos.length*(Math.random()))];
         if(mom && dad !== undefined){
             son = crossOverChild(mom,dad,0.7);
             if(Math.random()<=0.15){
@@ -137,8 +201,8 @@ program = function(){
             cromossomos.push(son);
             expression = translator(son);        
             if(valideExpression(expression)){            
-                if(calculator(expression) === 170){                
-                    regra = 170;
+                if(calculator(expression) === resultExpect){                
+                    regra = resultExpect;
                 }
             }
         }
