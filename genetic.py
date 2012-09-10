@@ -1,29 +1,29 @@
 import random
 import re
-import timeit
 
-LENGTH            = 32
-AMOUNT            = 10000
+LENGTH            = 40
+AMOUNT            = 1000
 PERCENTCROSS      = 0.7
 SIZELIB           = 4
+RESULT            = 280
 REGULAREXPRESSION = '^([\+\-]?)(\d+([\+\*\-\/]?))+\d$'
-LIBRARY           = {'[0, 0, 0, 0]': '0',
-                     '[0, 0, 0, 1]': '1',
-                     '[0, 0, 1, 0]': '2',
-                     '[0, 0, 1, 1]': '3',
-                     '[0, 1, 0, 0]': '4',
-                     '[0, 1, 0, 1]': '5',
-                     '[0, 1, 1, 0]': '6',
-                     '[0, 1, 1, 1]': '7',
-                     '[1, 0, 0, 0]': '8',
-                     '[1, 0, 0, 1]': '9',
-                     '[1, 0, 1, 0]': '/',
-                     '[1, 0, 1, 1]': '*',
-                     '[1, 1, 0, 0]': '-',
-                     '[1, 1, 0, 1]': '+'}
+LIBRARY           = {'0000': '0',
+                     '0001': '1',
+                     '0010': '2',
+                     '0011': '3',
+                     '0100': '4',
+                     '0101': '5',
+                     '0110': '6',
+                     '0111': '7',
+                     '1000': '8',
+                     '1001': '9',
+                     '1010': '/',
+                     '1011': '*',
+                     '1100': '-',
+                     '1101': '+'}
 
 def createPopulation():
-    return [[random.randrange(2) for x in xrange(0,LENGTH)] for y in xrange(0,AMOUNT)]
+    return [''.join(['%s' % random.randrange(2) for x in xrange(LENGTH)]) for y in xrange(AMOUNT)]
 
 def crossOverChild(crossDad, crossMom):
     crossSize = random.randrange(LENGTH)
@@ -50,9 +50,59 @@ def translator (chromosome):
 
 def validate (equation):
     if re.match(REGULAREXPRESSION, equation):
-        return true
+        return 1
     else:
-        return false
+        return 0
 
-t = timeit.Timer("createPopulation()", "from __main__ import createPopulation")
-print t
+def program ():
+    popu = createPopulation()
+    error = 0
+    while 1:
+        child = crossOverChild(random.choice(popu), random.choice(popu))
+        popu.append(child)
+        equation = translator(child)
+        if validate(equation):
+            equation = re.sub(r'\b0+(?!\b)', '', equation)
+            try:
+                resultGot = eval(equation)
+                if resultGot == RESULT:
+                    print translator(child),'---', resultGot,'---', error, '----', len(popu)
+                    break
+            except Exception, e:
+                error +=1   
+
+program()         
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
