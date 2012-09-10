@@ -1,5 +1,6 @@
 import random
 import re
+import timeit
 
 LENGTH            = 32
 AMOUNT            = 10000
@@ -22,7 +23,7 @@ LIBRARY           = {'[0, 0, 0, 0]': '0',
                      '[1, 1, 0, 1]': '+'}
 
 def createPopulation():
-    return [[random.randrange(2) for x in range(0,LENGTH)] for y in range(0,AMOUNT)]
+    return [[random.randrange(2) for x in xrange(0,LENGTH)] for y in xrange(0,AMOUNT)]
 
 def crossOverChild(crossDad, crossMom):
     crossSize = random.randrange(LENGTH)
@@ -42,7 +43,7 @@ def mutation (chromosome):
 
 def translator (chromosome):
     equation = ''
-    for x in range(0, LENGTH, SIZELIB):
+    for x in xrange(0, LENGTH, SIZELIB):
         equation += str(LIBRARY.get(str(chromosome[x:x+SIZELIB])))
 
     return equation
@@ -50,5 +51,8 @@ def translator (chromosome):
 def validate (equation):
     if re.match(REGULAREXPRESSION, equation):
         return true
-    else
+    else:
         return false
+
+t = timeit.Timer("createPopulation()", "from __main__ import createPopulation")
+print t
